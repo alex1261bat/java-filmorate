@@ -1,16 +1,26 @@
 package ru.yandex.practicum.models;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
-@Builder
 public class Film {
-    private final int id;
     private final int duration;
     private final String name;
     private final LocalDate releaseDate;
+    private int id;
     private String description;
+
+    public Film(int duration, String name, LocalDate releaseDate, String description) {
+        this.duration = duration;
+        this.name = name;
+        this.releaseDate = releaseDate;
+        setId();
+        this.description = description;
+    }
+
+    private void setId() {
+        ++id;
+    }
 }

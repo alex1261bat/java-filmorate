@@ -13,13 +13,8 @@ class FilmControllerTest {
 
     @Test
     public void shouldThrowValidationExceptionIfFilmNameIsEmpty() {
-        Film film = Film.builder()
-                .id(1)
-                .name("")
-                .description("film")
-                .duration(10)
-                .releaseDate(LocalDate.of(2012, 10, 23))
-                .build();
+        Film film = new Film(10, "", LocalDate.of(2012, 10, 23),
+                "description");
         String message = null;
 
         try {
@@ -30,21 +25,14 @@ class FilmControllerTest {
 
         assertEquals("Название фильма не может быть пустым.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
-        filmController.getFilms().clear();
     }
 
     @Test
     public void shouldThrowValidationExceptionIfFilmDescriptionLengthMore200() {
-        Film film = Film.builder()
-                .id(1)
-                .name("film")
-                .description("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" +
+        Film film = new Film(10, "film", LocalDate.of(2012, 10, 23),
+                "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" +
                         "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" +
-                        "ffffffffffffffffffffff")
-                .duration(10)
-                .releaseDate(LocalDate.of(2012, 10, 23))
-                .build();
-
+                        "ffffffffffffffffffffff");
         String message = null;
 
         try {
@@ -55,18 +43,12 @@ class FilmControllerTest {
 
         assertEquals("Длина описания должна быть не боле 200 символов.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
-        filmController.getFilms().clear();
     }
 
     @Test
     public void shouldThrowValidationExceptionIfFilmReleaseDateIsBefore1895_12_28() {
-        Film film = Film.builder()
-                .id(1)
-                .name("film")
-                .description("filmDescription")
-                .duration(10)
-                .releaseDate(LocalDate.of(1985, 12, 27))
-                .build();
+        Film film = new Film(10, "film", LocalDate.of(1895, 12, 27),
+                "filmDescription");
         String message = null;
 
         try {
@@ -77,18 +59,12 @@ class FilmControllerTest {
 
         assertEquals("Дата релиза должна быть не ранее 28 декабря 1985 года.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
-        filmController.getFilms().clear();
     }
 
     @Test
     public void shouldThrowValidationExceptionIfFilmDurationIsLess1() {
-        Film film = Film.builder()
-                .id(1)
-                .name("film")
-                .description("filmDescription")
-                .duration(0)
-                .releaseDate(LocalDate.of(2012, 12, 27))
-                .build();
+        Film film = new Film(0, "film", LocalDate.of(2012, 12, 27),
+                "filmDescription");
         String message = null;
 
         try {
@@ -99,6 +75,5 @@ class FilmControllerTest {
 
         assertEquals("Продолжительность фильма должна быть положительной.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
-        filmController.getFilms().clear();
     }
 }

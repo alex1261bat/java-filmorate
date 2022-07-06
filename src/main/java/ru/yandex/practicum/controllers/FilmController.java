@@ -36,10 +36,6 @@ public class FilmController {
         return film;
     }
 
-    public HashMap<Integer, Film> getFilms() {
-        return films;
-    }
-
     private void validateFilm(Film film) {
         if (film.getName().equals("") || film.getName() == null) {
             log.warn("Название фильма не может быть пустым.");
@@ -47,12 +43,15 @@ public class FilmController {
         } else if (film.getDescription().length() > 200) {
             log.warn("Длина описания должна быть не боле 200 символов.");
             throw new ValidationException("Длина описания должна быть не боле 200 символов.");
-        } else if (film.getReleaseDate().isBefore(LocalDate.of(1985, 12, 28))) {
+        } else if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.warn("Дата релиза должна быть не ранее 28 декабря 1985 года.");
             throw new ValidationException("Дата релиза должна быть не ранее 28 декабря 1985 года.");
         } else if (film.getDuration() < 1) {
             log.warn("Продолжительность фильма должна быть положительной.");
             throw new ValidationException("Продолжительность фильма должна быть положительной.");
+        }  else if (film.getId() < 1) {
+            log.warn("Неверный id.");
+            throw new ValidationException("Неверный id.");
         }
     }
 }
