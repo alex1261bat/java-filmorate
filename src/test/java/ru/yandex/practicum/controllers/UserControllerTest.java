@@ -30,6 +30,7 @@ class UserControllerTest {
 
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
+        userController.getUsers().clear();
     }
 
     @Test
@@ -51,6 +52,7 @@ class UserControllerTest {
 
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
+        userController.getUsers().clear();
     }
 
     @Test
@@ -72,6 +74,7 @@ class UserControllerTest {
 
         assertEquals("Логин не может быть пустым и содержать пробелы.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
+        userController.getUsers().clear();
     }
 
     @Test
@@ -93,6 +96,7 @@ class UserControllerTest {
 
         assertEquals("Логин не может быть пустым и содержать пробелы.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
+        userController.getUsers().clear();
     }
 
     @Test
@@ -107,6 +111,7 @@ class UserControllerTest {
         User newUser = userController.createUser(user);
 
         assertEquals("userLogin", newUser.getName());
+        userController.getUsers().clear();
     }
 
     @Test
@@ -128,5 +133,6 @@ class UserControllerTest {
 
         assertEquals("Дата рождения не может быть в будущем.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
+        userController.getUsers().clear();
     }
 }

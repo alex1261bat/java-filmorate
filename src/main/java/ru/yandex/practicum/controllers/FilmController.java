@@ -36,6 +36,10 @@ public class FilmController {
         return film;
     }
 
+    public HashMap<Integer, Film> getFilms() {
+        return films;
+    }
+
     private void validateFilm(Film film) {
         if (film.getName().equals("") || film.getName() == null) {
             log.warn("Название фильма не может быть пустым.");

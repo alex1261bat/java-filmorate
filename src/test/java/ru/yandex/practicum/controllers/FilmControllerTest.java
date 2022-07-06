@@ -30,7 +30,7 @@ class FilmControllerTest {
 
         assertEquals("Название фильма не может быть пустым.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
-
+        filmController.getFilms().clear();
     }
 
     @Test
@@ -55,6 +55,7 @@ class FilmControllerTest {
 
         assertEquals("Длина описания должна быть не боле 200 символов.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
+        filmController.getFilms().clear();
     }
 
     @Test
@@ -76,6 +77,7 @@ class FilmControllerTest {
 
         assertEquals("Дата релиза должна быть не ранее 28 декабря 1985 года.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
+        filmController.getFilms().clear();
     }
 
     @Test
@@ -97,5 +99,6 @@ class FilmControllerTest {
 
         assertEquals("Продолжительность фильма должна быть положительной.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
+        filmController.getFilms().clear();
     }
 }

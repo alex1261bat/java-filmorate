@@ -36,6 +36,10 @@ public class UserController {
         return user;
     }
 
+    public HashMap<Integer, User> getUsers() {
+        return users;
+    }
+
     private void validateUser(User user) {
         if (user.getEmail().equals("") || !user.getEmail().contains("@")) {
             log.warn("Электронная почта не может быть пустой и должна содержать символ @.");
