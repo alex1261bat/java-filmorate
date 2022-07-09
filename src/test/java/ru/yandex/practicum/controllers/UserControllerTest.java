@@ -99,4 +99,45 @@ class UserControllerTest {
         assertEquals("Дата рождения не может быть в будущем.", message);
         assertThrows(ValidationException.class, () -> userController.createUser(user));
     }
+
+    @Test
+    public void shouldThrowValidationExceptionIfUserEmailIsNull() {
+        User user = new User(LocalDate.of(2000, 10, 10), null,
+                "userLogin", "user");
+        String message = null;
+
+        try {
+            userController.createUser(user);
+        } catch (ValidationException validationException) {
+            message = validationException.getMessage();
+        }
+
+        assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
+        assertThrows(ValidationException.class, () -> userController.createUser(user));
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionIfUserLoginIsNull() {
+        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
+                null, "user");
+        String message = null;
+
+        try {
+            userController.createUser(user);
+        } catch (ValidationException validationException) {
+            message = validationException.getMessage();
+        }
+
+        assertEquals("Логин не может быть пустым и содержать пробелы.", message);
+        assertThrows(ValidationException.class, () -> userController.createUser(user));
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionIfUserNameIsNull() {
+        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
+                "userLogin", null);
+        User newUser = userController.createUser(user);
+
+        assertEquals("userLogin", newUser.getName());
+    }
 }

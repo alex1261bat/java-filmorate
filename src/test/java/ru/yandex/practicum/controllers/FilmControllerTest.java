@@ -41,7 +41,7 @@ class FilmControllerTest {
             message = validationException.getMessage();
         }
 
-        assertEquals("Длина описания должна быть не боле 200 символов.", message);
+        assertEquals("Длина описания должна быть не боле 200 символов и не должна быть null.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
     }
 
@@ -74,6 +74,38 @@ class FilmControllerTest {
         }
 
         assertEquals("Продолжительность фильма должна быть положительной.", message);
+        assertThrows(ValidationException.class, () -> filmController.createFilm(film));
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionIfFilmNameIsNull() {
+        Film film = new Film(10, null, LocalDate.of(2012, 10, 23),
+                "description");
+        String message = null;
+
+        try {
+            filmController.createFilm(film);
+        } catch (ValidationException validationException) {
+            message = validationException.getMessage();
+        }
+
+        assertEquals("Название фильма не может быть пустым.", message);
+        assertThrows(ValidationException.class, () -> filmController.createFilm(film));
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionIfFilmDescriptionIsNull() {
+        Film film = new Film(10, "film", LocalDate.of(2012, 10, 23),
+                null);
+        String message = null;
+
+        try {
+            filmController.createFilm(film);
+        } catch (ValidationException validationException) {
+            message = validationException.getMessage();
+        }
+
+        assertEquals("Длина описания должна быть не боле 200 символов и не должна быть null.", message);
         assertThrows(ValidationException.class, () -> filmController.createFilm(film));
     }
 }

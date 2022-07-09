@@ -9,18 +9,14 @@ public class Film {
     private final int duration;
     private final String name;
     private final LocalDate releaseDate;
-    private int id;
+    private long id;
     private String description;
 
     public Film(int duration, String name, LocalDate releaseDate, String description) {
         this.duration = duration;
         this.name = name;
         this.releaseDate = releaseDate;
-        setId();
+        setId(++id);
         this.description = description;
-    }
-
-    private void setId() {
-        ++id;
     }
 }
