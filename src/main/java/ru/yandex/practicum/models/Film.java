@@ -16,7 +16,6 @@ public class Film {
         this.duration = duration;
         this.name = name;
         this.releaseDate = releaseDate;
-        setId(++id);
         this.description = description;
     }
 }

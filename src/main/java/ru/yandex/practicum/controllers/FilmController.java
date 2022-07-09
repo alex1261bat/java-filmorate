@@ -16,6 +16,7 @@ import java.util.HashMap;
 public class FilmController {
     private static final LocalDate FIRST_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     private final HashMap<Long, Film> films = new HashMap<>();
+    private long id;
 
     @GetMapping
     public Collection<Film> findAllFilms() {
@@ -24,6 +25,7 @@ public class FilmController {
 
     @PostMapping
     public Film createFilm(@RequestBody Film film) {
+        film.setId(++id);
         validateFilm(film);
         log.trace("Сохранен объект: {}", film);
         films.put(film.getId(), film);

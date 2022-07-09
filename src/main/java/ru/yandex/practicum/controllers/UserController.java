@@ -15,6 +15,7 @@ import java.util.HashMap;
 @Slf4j
 public class UserController {
     private final HashMap<Long, User> users = new HashMap<>();
+    private long id;
 
     @GetMapping
     public Collection<User> findAllUsers() {
@@ -23,6 +24,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
+        user.setId(++id);
         validateUser(user);
         log.trace("Сохранен объект: {}", user);
         users.put(user.getId(), user);

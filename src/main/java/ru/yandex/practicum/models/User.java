@@ -14,7 +14,6 @@ public class User {
 
     public User(LocalDate birthday, String email, String login, String name) {
         this.birthday = birthday;
-        setId(++id);
         this.email = email;
         this.login = login;
         this.name = name;
