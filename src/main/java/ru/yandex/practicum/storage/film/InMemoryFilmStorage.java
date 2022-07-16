@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 public class InMemoryFilmStorage implements FilmStorage {
     private static final LocalDate FIRST_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     private final HashMap<Long, Film> films = new HashMap<>();
+    private long id;
 
     @Override
     public Collection<Film> findAllFilms() { // метод получения списка всех фильмов
@@ -33,6 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) { // метод создания фильма
+        film.setId(++id);
         validateFilm(film);
         log.trace("Сохранен объект: {}", film);
         films.put(film.getId(), film);
@@ -68,15 +70,19 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void validateFilm(Film film) { // метод валидации фильма
         if (film.getName() == null || film.getName().equals("")) {
+            this.id -= 1;
             log.warn("Название фильма не может быть пустым.");
             throw new ValidationException("Название фильма не может быть пустым.");
         } else if (film.getDescription() == null || film.getDescription().length() > 200) {
+            this.id -= 1;
             log.warn("Длина описания должна быть не боле 200 символов и не должна быть null.");
             throw new ValidationException("Длина описания должна быть не боле 200 символов и не должна быть null.");
         } else if (film.getReleaseDate().isBefore(FIRST_RELEASE_DATE)) {
+            this.id -= 1;
             log.warn("Дата релиза должна быть не ранее 28 декабря 1985 года.");
             throw new ValidationException("Дата релиза должна быть не ранее 28 декабря 1985 года.");
         } else if (film.getDuration() < 1) {
+            this.id -= 1;
             log.warn("Продолжительность фильма должна быть положительной.");
             throw new ValidationException("Продолжительность фильма должна быть положительной.");
         }  else if (film.getId() < 1) {

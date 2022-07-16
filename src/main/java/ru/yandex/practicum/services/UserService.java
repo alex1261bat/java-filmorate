@@ -7,7 +7,6 @@ import ru.yandex.practicum.models.User;
 import ru.yandex.practicum.storage.user.UserStorage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class UserService {
         return user;
     }
 
-    public Collection<User> findAllFriends(long userId) { // метод получения списка друзей
+    public List<User> findAllFriends(long userId) { // метод получения списка друзей
         User user = userStorage.findUserById(userId);
         List<User> friends = new ArrayList<>();
 
@@ -50,7 +49,7 @@ public class UserService {
         return friends;
     }
 
-    public Collection<User> findCommonFriends(long userId, long otherUserId) { // метод получения списка общих друзей
+    public List<User> findCommonFriends(long userId, long otherUserId) { // метод получения списка общих друзей
         User user = userStorage.findUserById(userId);
         User otherUser = userStorage.findUserById(otherUserId);
         List<User> commonFriends = new ArrayList<>();

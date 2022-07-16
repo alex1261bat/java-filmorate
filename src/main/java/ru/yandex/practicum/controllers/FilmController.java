@@ -11,7 +11,6 @@ import java.util.Collection;
 @RequestMapping("/films")
 public class FilmController {
     private final FilmService filmService;
-    private long id;
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -30,7 +29,6 @@ public class FilmController {
 
     @PostMapping
     public Film createFilm(@RequestBody Film film) { // создание фильма
-        film.setId(++id);
         return filmService.getFilmStorage().createFilm(film);
     }
 
