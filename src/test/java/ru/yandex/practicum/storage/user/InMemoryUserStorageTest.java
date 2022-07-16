@@ -1,4 +1,4 @@
-package ru.yandex.practicum.controllers;
+package ru.yandex.practicum.storage.user;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.exceptions.ValidationException;
@@ -8,8 +8,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserControllerTest {
-    UserController userController = new UserController();
+class InMemoryUserStorageTest {
+    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     @Test
     public void shouldThrowValidationExceptionIfUserEmailIsEmpty() {
@@ -18,13 +18,13 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
@@ -34,13 +34,13 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
@@ -50,13 +50,13 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
@@ -66,20 +66,20 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
     public void shouldSetUserNameIfEmpty() {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "");
-        User newUser = userController.createUser(user);
+        User newUser = inMemoryUserStorage.createUser(user);
 
         assertEquals("userLogin", newUser.getName());
     }
@@ -91,13 +91,13 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Дата рождения не может быть в будущем.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
@@ -107,13 +107,13 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
@@ -123,20 +123,20 @@ class UserControllerTest {
         String message = null;
 
         try {
-            userController.createUser(user);
+            inMemoryUserStorage.createUser(user);
         } catch (ValidationException validationException) {
             message = validationException.getMessage();
         }
 
         assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> userController.createUser(user));
+        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
     }
 
     @Test
     public void shouldThrowValidationExceptionIfUserNameIsNull() {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", null);
-        User newUser = userController.createUser(user);
+        User newUser = inMemoryUserStorage.createUser(user);
 
         assertEquals("userLogin", newUser.getName());
     }
