@@ -11,13 +11,16 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Data
 public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
+    }
+
+    public UserStorage getUserStorage() {
+        return userStorage;
     }
 
     public User addToFriends(long userId, long friendId) { // метод добавления пользователя в друзья

@@ -43,17 +43,17 @@ public class FilmController {
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public Film addLike(@PathVariable long filmId, long userId) { // добавления лайка в фильм
+    public Film addLike(@PathVariable long filmId, @PathVariable long userId) { // добавления лайка в фильм
         return filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public Film deleteLike(@PathVariable long filmId, long userId) { // удаление лайка
+    public Film deleteLike(@PathVariable long filmId, @PathVariable long userId) { // удаление лайка
         return filmService.deleteLike(filmId, userId);
     }
 
-    @GetMapping("/popular?count={count}")
-    public Collection<Film> findBestFilms(@PathVariable Integer count) { // получение списка лучших фильмов
+    @GetMapping("/popular")
+    public Collection<Film> findBestFilms(@RequestParam(defaultValue = "10", required = false) Integer count) { // получение списка лучших фильмов
         return filmService.findBestFilms(count);
     }
 }
