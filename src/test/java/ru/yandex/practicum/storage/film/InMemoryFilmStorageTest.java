@@ -1,7 +1,6 @@
 package ru.yandex.practicum.storage.film;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.exceptions.ValidationException;
 import ru.yandex.practicum.models.Film;
 
 import java.time.LocalDate;
@@ -9,103 +8,70 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryFilmStorageTest {
-    InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
+    FilmStorage filmStorage = new InMemoryFilmStorage();
 
     @Test
-    public void shouldThrowValidationExceptionIfFilmNameIsEmpty() {
-        Film film = new Film(10, "", LocalDate.of(2012, 10, 23),
+    void shouldFindAllFilms() {
+        assertEquals(0, filmStorage.findAllFilms().size());
+
+        Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
-        String message = null;
 
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        filmStorage.createFilm(film);
 
-        assertEquals("Название фильма не может быть пустым.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
+        assertEquals(1, filmStorage.findAllFilms().size());
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfFilmDescriptionLengthMore200() {
-        Film film = new Film(10, "film", LocalDate.of(2012, 10, 23),
-                "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" +
-                        "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" +
-                        "ffffffffffffffffffffff");
-        String message = null;
-
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
-
-        assertEquals("Длина описания должна быть не боле 200 символов и не должна быть null.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfFilmReleaseDateIsBefore1895_12_28() {
-        Film film = new Film(10, "film", LocalDate.of(1895, 12, 27),
-                "filmDescription");
-        String message = null;
-
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
-
-        assertEquals("Дата релиза должна быть не ранее 28 декабря 1985 года.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfFilmDurationIsLess1() {
-        Film film = new Film(0, "film", LocalDate.of(2012, 12, 27),
-                "filmDescription");
-        String message = null;
-
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
-
-        assertEquals("Продолжительность фильма должна быть положительной.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfFilmNameIsNull() {
-        Film film = new Film(10, null, LocalDate.of(2012, 10, 23),
+    void shouldFindFilmById() {
+        Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
-        String message = null;
 
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        filmStorage.createFilm(film);
 
-        assertEquals("Название фильма не может быть пустым.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
+        Film film1 = filmStorage.findFilmById(film.getId()).get();
+
+        assertEquals(film, film1);
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfFilmDescriptionIsNull() {
-        Film film = new Film(10, "film", LocalDate.of(2012, 10, 23),
-                null);
-        String message = null;
+    void shouldCreateFilm() {
+        Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
+                "description");
 
-        try {
-            inMemoryFilmStorage.createFilm(film);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        assertEquals(0, filmStorage.findAllFilms().size());
 
-        assertEquals("Длина описания должна быть не боле 200 символов и не должна быть null.", message);
-        assertThrows(ValidationException.class, () -> inMemoryFilmStorage.createFilm(film));
+        filmStorage.createFilm(film);
+
+        assertEquals(1, filmStorage.findAllFilms().size());
+    }
+
+    @Test
+    void shouldUpdateFilm() {
+        Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
+                "description");
+        Film film1 = new Film(1, "Film1", LocalDate.of(2012, 10, 23),
+                "description1");
+
+        filmStorage.createFilm(film);
+        filmStorage.updateFilm(film1);
+
+        Film film2 = filmStorage.findFilmById(film.getId()).get();
+
+        assertEquals(film1, film2);
+    }
+
+    @Test
+    void shouldDeleteFilmById() {
+        Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
+                "description");
+
+        filmStorage.createFilm(film);
+
+        assertEquals(1, filmStorage.findAllFilms().size());
+
+        filmStorage.deleteFilmById(film.getId());
+
+        assertEquals(0, filmStorage.findAllFilms().size());
     }
 }

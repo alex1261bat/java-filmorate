@@ -1,19 +1,33 @@
 package ru.yandex.practicum.services;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.exceptions.UserNotFoundException;
 import ru.yandex.practicum.models.User;
 import ru.yandex.practicum.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
     UserStorage userStorage = new InMemoryUserStorage();
     UserService userService = new UserService(userStorage);
+
+    @Test
+    void shouldThrowUserNotFoundExceptionIfNoSuchUser() {
+        String message = null;
+
+        try {
+            userService.findUserById(0);
+        } catch (UserNotFoundException userNotFoundException) {
+            message = userNotFoundException.getMessage();
+        }
+
+        assertEquals("Пользователь с  id=" + 0 + " не существует.", message);
+        assertThrows(UserNotFoundException.class, () -> userService.findUserById(0));
+    }
 
     @Test
     void shouldAddToFriends() {

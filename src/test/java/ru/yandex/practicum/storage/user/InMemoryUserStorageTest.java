@@ -1,7 +1,7 @@
 package ru.yandex.practicum.storage.user;
 
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.exceptions.ValidationException;
+import ru.yandex.practicum.models.Film;
 import ru.yandex.practicum.models.User;
 
 import java.time.LocalDate;
@@ -9,135 +9,70 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryUserStorageTest {
-    InMemoryUserStorage inMemoryUserStorage = new InMemoryUserStorage();
+    UserStorage userStorage = new InMemoryUserStorage();
 
     @Test
-    public void shouldThrowValidationExceptionIfUserEmailIsEmpty() {
-        User user = new User(LocalDate.of(2000, 10, 10), "",
+    void shouldFindAllUsers() {
+        assertEquals(0, userStorage.findAllUsers().size());
+
+        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
-        String message = null;
 
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        userStorage.createUser(user);
 
-        assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
+        assertEquals(1, userStorage.findAllUsers().size());
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfUserEmailNotContainsAtSign() {
-        User user = new User(LocalDate.of(2000, 10, 10), "user.mail.ru",
+    void shouldFindUserById() {
+        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
-        String message = null;
 
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        userStorage.createUser(user);
 
-        assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
+        User user1 = userStorage.findUserById(user.getId()).get();
+
+        assertEquals(user, user1);
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfUserLoginIsEmpty() {
+    void shouldCreateUser() {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
-                "", "user");
-        String message = null;
-
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
-
-        assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfUserLoginContainsWhitespaces() {
-        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
-                "user login", "user");
-        String message = null;
-
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
-
-        assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
-    }
-
-    @Test
-    public void shouldSetUserNameIfEmpty() {
-        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
-                "userLogin", "");
-        User newUser = inMemoryUserStorage.createUser(user);
-
-        assertEquals("userLogin", newUser.getName());
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfUserBirthdayIsAfterCurrentDate() {
-        User user = new User(LocalDate.of(2022, 12, 20), "user@mail.ru",
                 "userLogin", "user");
-        String message = null;
 
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        assertEquals(0, userStorage.findAllUsers().size());
 
-        assertEquals("Дата рождения не может быть в будущем.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
+        userStorage.createUser(user);
+
+        assertEquals(1, userStorage.findAllUsers().size());
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfUserEmailIsNull() {
-        User user = new User(LocalDate.of(2000, 10, 10), null,
+    void shouldUpdateUser() {
+        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
-        String message = null;
+        User user1 = new User(LocalDate.of(2002, 1, 10), "user1@mail.ru",
+                "user1Login", "user1");
 
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        userStorage.createUser(user);
+        userStorage.updateUser(user1);
 
-        assertEquals("Электронная почта не может быть пустой и должна содержать символ @.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
+        User user2 = userStorage.findUserById(user.getId()).get();
+
+        assertEquals(user1, user2);
     }
 
     @Test
-    public void shouldThrowValidationExceptionIfUserLoginIsNull() {
+    void shouldDeleteUserById() {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
-                null, "user");
-        String message = null;
+                "userLogin", "user");
 
-        try {
-            inMemoryUserStorage.createUser(user);
-        } catch (ValidationException validationException) {
-            message = validationException.getMessage();
-        }
+        userStorage.createUser(user);
 
-        assertEquals("Логин не может быть пустым и содержать пробелы.", message);
-        assertThrows(ValidationException.class, () -> inMemoryUserStorage.createUser(user));
-    }
+        assertEquals(1, userStorage.findAllUsers().size());
 
-    @Test
-    public void shouldThrowValidationExceptionIfUserNameIsNull() {
-        User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
-                "userLogin", null);
-        User newUser = inMemoryUserStorage.createUser(user);
+        userStorage.deleteUserById(user.getId());
 
-        assertEquals("userLogin", newUser.getName());
+        assertEquals(0, userStorage.findAllUsers().size());
     }
 }

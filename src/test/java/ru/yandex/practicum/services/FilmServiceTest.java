@@ -1,6 +1,7 @@
 package ru.yandex.practicum.services;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.models.Film;
 import ru.yandex.practicum.models.User;
 import ru.yandex.practicum.storage.film.FilmStorage;
@@ -11,12 +12,27 @@ import ru.yandex.practicum.storage.user.UserStorage;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmServiceTest {
     UserStorage userStorage = new InMemoryUserStorage();
     FilmStorage filmStorage = new InMemoryFilmStorage();
     FilmService filmService = new FilmService(filmStorage, userStorage);
+
+    @Test
+    void shouldThrowFilmNotFoundExceptionIfNoSuchFilm() {
+        String message = null;
+
+        try {
+            filmService.findFilmById(0);
+        } catch (FilmNotFoundException filmNotFoundException) {
+            message = filmNotFoundException.getMessage();
+        }
+
+        assertEquals("Фильм с id=" + 0 + " не существует.", message);
+        assertThrows(FilmNotFoundException.class, () -> filmService.findFilmById(0));
+    }
 
     @Test
     void shouldAddLike() {
@@ -28,11 +44,13 @@ class FilmServiceTest {
         filmStorage.createFilm(film);
         userStorage.createUser(user);
 
-        assertEquals(0, filmStorage.findFilmById(film.getId()).getLikes().size());
+        assertEquals(0, filmStorage.findFilmById(film.getId())
+                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
 
         filmService.addLike(film.getId(), user.getId());
 
-        assertEquals(1, filmStorage.findFilmById(film.getId()).getLikes().size());
+        assertEquals(1, filmStorage.findFilmById(film.getId())
+                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
     }
 
     @Test
@@ -45,15 +63,18 @@ class FilmServiceTest {
         filmStorage.createFilm(film);
         userStorage.createUser(user);
 
-        assertEquals(0, filmStorage.findFilmById(film.getId()).getLikes().size());
+        assertEquals(0, filmStorage.findFilmById(film.getId())
+                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
 
         filmService.addLike(film.getId(), user.getId());
 
-        assertEquals(1, filmStorage.findFilmById(film.getId()).getLikes().size());
+        assertEquals(1, filmStorage.findFilmById(film.getId())
+                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
 
         filmService.deleteLike(film.getId(), user.getId());
 
-        assertEquals(0, filmStorage.findFilmById(film.getId()).getLikes().size());
+        assertEquals(0, filmStorage.findFilmById(film.getId())
+                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
     }
 
     @Test
