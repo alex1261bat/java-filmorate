@@ -41,16 +41,16 @@ class FilmServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        filmStorage.createFilm(film);
+        film.setId(1);
+        user.setId(1);
+        filmService.createFilm(film);
         userStorage.createUser(user);
 
-        assertEquals(0, filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
+        assertEquals(0, filmService.findFilmById(film.getId()).getLikes().size());
 
         filmService.addLike(film.getId(), user.getId());
 
-        assertEquals(1, filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
+        assertEquals(1, filmService.findFilmById(film.getId()).getLikes().size());
     }
 
     @Test
@@ -60,21 +60,20 @@ class FilmServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        filmStorage.createFilm(film);
+        film.setId(1);
+        user.setId(1);
+        filmService.createFilm(film);
         userStorage.createUser(user);
 
-        assertEquals(0, filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
+        assertEquals(0, filmService.findFilmById(film.getId()).getLikes().size());
 
         filmService.addLike(film.getId(), user.getId());
 
-        assertEquals(1, filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
+        assertEquals(1, filmService.findFilmById(film.getId()).getLikes().size());
 
         filmService.deleteLike(film.getId(), user.getId());
 
-        assertEquals(0, filmStorage.findFilmById(film.getId())
-                .orElseThrow(() -> new FilmNotFoundException(film.getId())).getLikes().size());
+        assertEquals(0, filmService.findFilmById(film.getId()).getLikes().size());
     }
 
     @Test
@@ -90,9 +89,14 @@ class FilmServiceTest {
         User user1 = new User(LocalDate.of(2001, 1, 1), "user1@mail.ru",
                 "user1Login", "user1");
 
-        filmStorage.createFilm(film);
-        filmStorage.createFilm(film1);
-        filmStorage.createFilm(film2);
+        film.setId(1);
+        film1.setId(2);
+        film2.setId(3);
+        user.setId(1);
+        user1.setId(2);
+        filmService.createFilm(film);
+        filmService.createFilm(film1);
+        filmService.createFilm(film2);
         userStorage.createUser(user);
         userStorage.createUser(user1);
         filmService.addLike(film.getId(), user.getId());

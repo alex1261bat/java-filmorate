@@ -17,6 +17,7 @@ class InMemoryFilmStorageTest {
         Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
 
+        film.setId(1);
         filmStorage.createFilm(film);
 
         assertEquals(1, filmStorage.findAllFilms().size());
@@ -27,6 +28,7 @@ class InMemoryFilmStorageTest {
         Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
 
+        film.setId(1);
         filmStorage.createFilm(film);
 
         Film film1 = filmStorage.findFilmById(film.getId()).get();
@@ -38,6 +40,8 @@ class InMemoryFilmStorageTest {
     void shouldCreateFilm() {
         Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
+
+        film.setId(1);
 
         assertEquals(0, filmStorage.findAllFilms().size());
 
@@ -53,6 +57,8 @@ class InMemoryFilmStorageTest {
         Film film1 = new Film(1, "Film1", LocalDate.of(2012, 10, 23),
                 "description1");
 
+        film.setId(1);
+        film1.setId(1);
         filmStorage.createFilm(film);
         filmStorage.updateFilm(film1);
 
@@ -66,6 +72,7 @@ class InMemoryFilmStorageTest {
         Film film = new Film(10, "Film", LocalDate.of(2012, 10, 23),
                 "description");
 
+        film.setId(1);
         filmStorage.createFilm(film);
 
         assertEquals(1, filmStorage.findAllFilms().size());

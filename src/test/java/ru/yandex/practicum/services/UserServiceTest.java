@@ -36,8 +36,10 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        userStorage.createUser(user);
-        userStorage.createUser(otherUser);
+        user.setId(1);
+        otherUser.setId(2);
+        userService.createUser(user);
+        userService.createUser(otherUser);
 
         assertEquals(0, userService.findAllFriends(user.getId()).size());
         assertEquals(0, userService.findAllFriends(otherUser.getId()).size());
@@ -55,8 +57,10 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        userStorage.createUser(user);
-        userStorage.createUser(otherUser);
+        user.setId(1);
+        otherUser.setId(2);
+        userService.createUser(user);
+        userService.createUser(otherUser);
 
         assertEquals(0, userService.findAllFriends(user.getId()).size());
         assertEquals(0, userService.findAllFriends(otherUser.getId()).size());
@@ -77,7 +81,8 @@ class UserServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        userStorage.createUser(user);
+        user.setId(1);
+        userService.createUser(user);
         assertEquals(0, userService.findAllFriends(user.getId()).size());
     }
 
@@ -90,9 +95,12 @@ class UserServiceTest {
         User friendUser = new User(LocalDate.of(2002, 11, 1), "friendUser@mail.ru",
                 "friendUserLogin", "friendUser");
 
-        userStorage.createUser(user);
-        userStorage.createUser(otherUser);
-        userStorage.createUser(friendUser);
+        user.setId(1);
+        otherUser.setId(2);
+        friendUser.setId(3);
+        userService.createUser(user);
+        userService.createUser(otherUser);
+        userService.createUser(friendUser);
 
         assertEquals(0, userService.findAllFriends(user.getId()).size());
 
@@ -111,8 +119,10 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        userStorage.createUser(user);
-        userStorage.createUser(otherUser);
+        user.setId(1);
+        otherUser.setId(2);
+        userService.createUser(user);
+        userService.createUser(otherUser);
         Collection<User> commonFriends = userService.findCommonFriends(user.getId(), otherUser.getId());
 
         assertTrue(commonFriends.isEmpty());
@@ -127,9 +137,12 @@ class UserServiceTest {
         User friendUser = new User(LocalDate.of(2002, 11, 1), "friendUser@mail.ru",
                 "friendUserLogin", "friendUser");
 
-        userStorage.createUser(user);
-        userStorage.createUser(otherUser);
-        userStorage.createUser(friendUser);
+        user.setId(1);
+        otherUser.setId(2);
+        friendUser.setId(3);
+        userService.createUser(user);
+        userService.createUser(otherUser);
+        userService.createUser(friendUser);
         userService.addToFriends(user.getId(), friendUser.getId());
         userService.addToFriends(otherUser.getId(), friendUser.getId());
         Collection<User> commonFriends = userService.findCommonFriends(user.getId(), otherUser.getId());
