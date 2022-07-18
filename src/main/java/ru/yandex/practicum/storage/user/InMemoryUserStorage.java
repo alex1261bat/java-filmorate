@@ -13,6 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private final HashMap<Long, User> users = new HashMap<>();
+    private long id;
 
     @Override
     public Collection<User> findAllUsers() { // метод получения списка всех пользователей
@@ -26,14 +27,16 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) { // метод создания пользователя
+        user.setId(++id);
         users.put(user.getId(), user);
+        log.trace("Сохранен объект: {}", user);
         return user;
     }
 
     @Override
     public User updateUser(User user) { // метод обновления пользователя
-        log.trace("Сохранен объект: {}", user);
         users.put(user.getId(), user);
+        log.trace("Обновлен объект: {}.", user);
         return user;
     }
 
@@ -41,8 +44,8 @@ public class InMemoryUserStorage implements UserStorage {
     public User deleteUserById(long id) { // метод удаления пользователя по id
         User user = users.get(id);
 
-        log.trace("Удален объект: {}", user);
         users.remove(id);
+        log.trace("Удален объект: {}", user);
         return user;
     }
 }

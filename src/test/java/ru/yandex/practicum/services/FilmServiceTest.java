@@ -41,8 +41,6 @@ class FilmServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        film.setId(1);
-        user.setId(1);
         filmService.createFilm(film);
         userStorage.createUser(user);
 
@@ -60,8 +58,6 @@ class FilmServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        film.setId(1);
-        user.setId(1);
         filmService.createFilm(film);
         userStorage.createUser(user);
 
@@ -89,11 +85,6 @@ class FilmServiceTest {
         User user1 = new User(LocalDate.of(2001, 1, 1), "user1@mail.ru",
                 "user1Login", "user1");
 
-        film.setId(1);
-        film1.setId(2);
-        film2.setId(3);
-        user.setId(1);
-        user1.setId(2);
         filmService.createFilm(film);
         filmService.createFilm(film1);
         filmService.createFilm(film2);

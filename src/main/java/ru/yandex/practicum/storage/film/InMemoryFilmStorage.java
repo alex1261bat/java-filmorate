@@ -1,5 +1,6 @@
 package ru.yandex.practicum.storage.film;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.models.Film;
@@ -10,9 +11,11 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @Component
+@Data
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Long, Film> films = new HashMap<>();
+    private long id;
 
     @Override
     public Collection<Film> findAllFilms() { // метод получения списка всех фильмов
@@ -26,14 +29,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) { // метод создания фильма
+        film.setId(++id);
         films.put(film.getId(), film);
+        log.trace("Сохранен объект: {}", film);
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) { // метод обновления фильма
-        log.trace("Сохранен объект: {}.", film);
         films.put(film.getId(), film);
+        log.trace("Обновлен объект: {}.", film);
         return film;
     }
 
@@ -41,8 +46,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film deleteFilmById(long id) { // метод удаления фильма по id
         Film film = films.get(id);
 
-        log.trace("Удален объект: {}.", film);
         films.remove(id);
+        log.trace("Удален объект: {}.", film);
         return film;
     }
 }

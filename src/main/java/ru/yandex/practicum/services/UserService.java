@@ -33,18 +33,18 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-        userStorage.findUserById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+        findUserById(user.getId());
         return userStorage.updateUser(user);
     }
 
     public User deleteUserById(long id) {
-        userStorage.findUserById(id).orElseThrow(() -> new UserNotFoundException(id));
+        findUserById(id);
         return userStorage.deleteUserById(id);
     }
 
     public User addToFriends(long userId, long friendId) { // метод добавления пользователя в друзья
-        User user = userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        User friend = userStorage.findUserById(friendId).orElseThrow(() -> new UserNotFoundException(friendId));
+        User user = findUserById(userId);
+        User friend = findUserById(friendId);
 
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
@@ -52,8 +52,8 @@ public class UserService {
     }
 
     public User deleteFromFriends(long userId, long friendId) { // метод удаления пользователя из друзей
-        User user = userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        User friend = userStorage.findUserById(friendId).orElseThrow(() -> new UserNotFoundException(friendId));
+        User user = findUserById(userId);
+        User friend = findUserById(friendId);
 
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
@@ -61,25 +61,25 @@ public class UserService {
     }
 
     public List<User> findAllFriends(long userId) { // метод получения списка друзей
-        User user = userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        User user = findUserById(userId);
         List<User> friends = new ArrayList<>();
 
         for (Long id : user.getFriends()) {
-            friends.add(userStorage.findUserById(id).orElseThrow(() -> new UserNotFoundException(id)));
+            friends.add(findUserById(id));
         }
 
         return friends;
     }
 
     public List<User> findCommonFriends(long userId, long otherUserId) { // метод получения списка общих друзей
-        User user = userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        User otherUser = userStorage.findUserById(otherUserId).orElseThrow(() -> new UserNotFoundException(otherUserId));
+        User user = findUserById(userId);
+        User otherUser = findUserById(otherUserId);
         List<User> commonFriends = new ArrayList<>();
 
         if (!user.getFriends().isEmpty() && !otherUser.getFriends().isEmpty()) {
             for (Long id : user.getFriends()) {
                 if (otherUser.getFriends().contains(id)) {
-                    commonFriends.add(userStorage.findUserById(id).orElseThrow(() -> new UserNotFoundException(id)));
+                    commonFriends.add(findUserById(id));
                 }
             }
         } else {

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,10 +20,10 @@ public class ErrorHandler {
         return validationException.getMessage();
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleConstraintViolationException(final ConstraintViolationException constraintViolationException) {
-        return constraintViolationException.getMessage();
+    public String handleAnnotationValidationException(final RuntimeException runtimeException) {
+        return runtimeException.getMessage();
     }
 
     @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})

@@ -18,7 +18,6 @@ class InMemoryUserStorageTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        user.setId(1);
         userStorage.createUser(user);
 
         assertEquals(1, userStorage.findAllUsers().size());
@@ -29,7 +28,6 @@ class InMemoryUserStorageTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        user.setId(1);
         userStorage.createUser(user);
 
         User user1 = userStorage.findUserById(user.getId()).get();
@@ -42,8 +40,6 @@ class InMemoryUserStorageTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        user.setId(1);
-
         assertEquals(0, userStorage.findAllUsers().size());
 
         userStorage.createUser(user);
@@ -55,12 +51,12 @@ class InMemoryUserStorageTest {
     void shouldUpdateUser() {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
-        User user1 = new User(LocalDate.of(2002, 1, 10), "user1@mail.ru",
-                "user1Login", "user1");
 
-        user.setId(1);
-        user1.setId(1);
         userStorage.createUser(user);
+
+        User user1 = userStorage.findUserById(user.getId()).get();
+
+        user.setName("user1");
         userStorage.updateUser(user1);
 
         User user2 = userStorage.findUserById(user.getId()).get();
@@ -73,7 +69,6 @@ class InMemoryUserStorageTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        user.setId(1);
         userStorage.createUser(user);
 
         assertEquals(1, userStorage.findAllUsers().size());

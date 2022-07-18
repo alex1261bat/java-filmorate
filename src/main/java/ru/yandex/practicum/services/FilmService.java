@@ -36,17 +36,17 @@ public class FilmService {
     }
 
     public Film updateFilm(Film film) {
-        filmStorage.findFilmById(film.getId()).orElseThrow(() -> new FilmNotFoundException(film.getId()));
+        findFilmById(film.getId());
         return filmStorage.updateFilm(film);
     }
 
     public Film deleteFilmById(long id) {
-        filmStorage.findFilmById(id).orElseThrow(() -> new FilmNotFoundException(id));
+        findFilmById(id);
         return filmStorage.deleteFilmById(id);
     }
 
     public Film addLike(long filmId, long userId) { // метод добавления лайка в фильм
-        Film film = filmStorage.findFilmById(filmId).orElseThrow(() -> new FilmNotFoundException(filmId));
+        Film film = findFilmById(filmId);
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().add(userId);
@@ -54,7 +54,7 @@ public class FilmService {
     }
 
     public Film deleteLike(long filmId, long userId) { // метод удаления лайка
-        Film film = filmStorage.findFilmById(filmId).orElseThrow(() -> new FilmNotFoundException(filmId));
+        Film film = findFilmById(filmId);
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().remove(userId);

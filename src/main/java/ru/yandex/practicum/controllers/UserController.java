@@ -1,21 +1,18 @@
 package ru.yandex.practicum.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.exceptions.ValidationException;
 import ru.yandex.practicum.models.User;
 import ru.yandex.practicum.services.UserService;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
-@Slf4j
 public class UserController {
     private final UserService userService;
-    private long id;
 
     @Autowired
     public UserController(UserService userService) {
@@ -33,15 +30,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) { // создание пользователя
-        user.setId(++id);
+    public User createUser(@Valid @RequestBody User user) { // создание пользователя
         validateUser(user);
-        log.trace("Сохранен объект: {}", user);
         return userService.createUser(user);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) { // обновление пользователя
+    public User updateUser(@Valid @RequestBody User user) { // обновление пользователя
         return userService.updateUser(user);
     }
 
@@ -70,25 +65,11 @@ public class UserController {
         return userService.findCommonFriends(id, otherId);
     }
 
-    public void validateUser(User user) { // метод валидации пользователя
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@") ||
-                user.getEmail().contains(" ")) {
-            this.id -= 1;
-            log.warn("Электронная почта не может быть пустой и должна содержать символ @.");
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @.");
-        } else if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            this.id -= 1;
-            log.warn("Логин не может быть пустым и содержать пробелы.");
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы.");
-        } else if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
-            this.id -= 1;
-            log.warn("Дата рождения не может быть в будущем.");
-            throw new ValidationException("Дата рождения не может быть в будущем.");
+    private void validateUser(User user) { // метод валидации пользователя
+        if (user.getLogin().contains(" ")) {
+            throw new ValidationException("Логин не может содержать пробелы.");
         } else if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        } else if (user.getId() < 1) {
-            log.warn("Неверный id.");
-            throw new ValidationException("Неверный id.");
         }
     }
 }

@@ -36,8 +36,6 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        user.setId(1);
-        otherUser.setId(2);
         userService.createUser(user);
         userService.createUser(otherUser);
 
@@ -57,8 +55,6 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        user.setId(1);
-        otherUser.setId(2);
         userService.createUser(user);
         userService.createUser(otherUser);
 
@@ -81,7 +77,6 @@ class UserServiceTest {
         User user = new User(LocalDate.of(2000, 10, 10), "user@mail.ru",
                 "userLogin", "user");
 
-        user.setId(1);
         userService.createUser(user);
         assertEquals(0, userService.findAllFriends(user.getId()).size());
     }
@@ -95,9 +90,6 @@ class UserServiceTest {
         User friendUser = new User(LocalDate.of(2002, 11, 1), "friendUser@mail.ru",
                 "friendUserLogin", "friendUser");
 
-        user.setId(1);
-        otherUser.setId(2);
-        friendUser.setId(3);
         userService.createUser(user);
         userService.createUser(otherUser);
         userService.createUser(friendUser);
@@ -119,8 +111,6 @@ class UserServiceTest {
         User otherUser = new User(LocalDate.of(2001, 11, 1), "otherUser@mail.ru",
                 "otherUserLogin", "otherUser");
 
-        user.setId(1);
-        otherUser.setId(2);
         userService.createUser(user);
         userService.createUser(otherUser);
         Collection<User> commonFriends = userService.findCommonFriends(user.getId(), otherUser.getId());
@@ -137,9 +127,6 @@ class UserServiceTest {
         User friendUser = new User(LocalDate.of(2002, 11, 1), "friendUser@mail.ru",
                 "friendUserLogin", "friendUser");
 
-        user.setId(1);
-        otherUser.setId(2);
-        friendUser.setId(3);
         userService.createUser(user);
         userService.createUser(otherUser);
         userService.createUser(friendUser);
