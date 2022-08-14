@@ -46,7 +46,7 @@ public class FilmController {
     }
 
     @DeleteMapping("/{filmId}")
-    public Film deleteFilmById(@PathVariable long filmId) { // удаление фильма по id
+    public boolean deleteFilmById(@PathVariable long filmId) { // удаление фильма по id
         return filmService.deleteFilmById(filmId);
     }
 

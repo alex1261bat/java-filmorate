@@ -1,6 +1,7 @@
 package ru.yandex.practicum.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.exceptions.UserNotFoundException;
@@ -16,11 +17,13 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, JdbcTemplate jdbcTemplate) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Collection<Film> findAllFilms() {
@@ -40,7 +43,7 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public Film deleteFilmById(long id) {
+    public boolean deleteFilmById(long id) {
         findFilmById(id);
         return filmStorage.deleteFilmById(id);
     }
@@ -50,6 +53,7 @@ public class FilmService {
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().add(userId);
+        saveLikeToTable(filmId, userId);
         return film;
     }
 
@@ -58,6 +62,7 @@ public class FilmService {
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().remove(userId);
+        deleteLikeFromTable(filmId, userId);
         return film;
     }
 
@@ -66,5 +71,18 @@ public class FilmService {
                 .sorted(((o1, o2) -> o2.getLikes().size() - o1.getLikes().size()))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    private void saveLikeToTable(long filmId, long userId) {
+        String sqlQuery = "insert into film_likes (film_id, user_id) " +
+                "values (?, ?)";
+
+        jdbcTemplate.update(sqlQuery, filmId, userId);
+    }
+
+    private void deleteLikeFromTable (long filmId, long userId) {
+        String sqlQuery = "delete from film_likes where film_id = ? and user_id = ?";
+
+        jdbcTemplate.update(sqlQuery, filmId, userId);
     }
 }

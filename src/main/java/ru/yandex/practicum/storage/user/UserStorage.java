@@ -17,5 +17,5 @@ public interface UserStorage {
 
     User updateUser(User user); // метод обновления пользователя
 
-    User deleteUserById(long id); // метод удаления пользователя по id
+    boolean deleteUserById(long id); // метод удаления пользователя по id
 }
