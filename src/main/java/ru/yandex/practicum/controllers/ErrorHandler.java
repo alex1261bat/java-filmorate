@@ -5,9 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.exceptions.FilmNotFoundException;
-import ru.yandex.practicum.exceptions.UserNotFoundException;
-import ru.yandex.practicum.exceptions.ValidationException;
+import ru.yandex.practicum.exceptions.*;
 
 import javax.validation.ConstraintViolationException;
 
@@ -26,7 +24,8 @@ public class ErrorHandler {
         return runtimeException.getMessage();
     }
 
-    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class})
+    @ExceptionHandler({FilmNotFoundException.class, UserNotFoundException.class, FriendStatusNotFoundException.class,
+        GenreNotFoundException.class, RatingMPANotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleFilmUserNotFoundException(final RuntimeException runtimeException) {
         return runtimeException.getMessage();

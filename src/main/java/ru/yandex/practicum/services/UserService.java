@@ -37,7 +37,7 @@ public class UserService {
         return userStorage.updateUser(user);
     }
 
-    public User deleteUserById(long id) {
+    public boolean deleteUserById(long id) {
         findUserById(id);
         return userStorage.deleteUserById(id);
     }
@@ -46,8 +46,8 @@ public class UserService {
         User user = findUserById(userId);
         User friend = findUserById(friendId);
 
-        user.getFriends().add(friendId);
         friend.getFriends().add(userId);
+        userStorage.saveFriendToTable(userId, friendId);
         return friend;
     }
 
@@ -57,6 +57,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
+        userStorage.deleteFriendFromTable(userId, friendId);
         return user;
     }
 

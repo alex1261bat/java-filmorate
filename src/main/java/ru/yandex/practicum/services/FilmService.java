@@ -40,7 +40,7 @@ public class FilmService {
         return filmStorage.updateFilm(film);
     }
 
-    public Film deleteFilmById(long id) {
+    public boolean deleteFilmById(long id) {
         findFilmById(id);
         return filmStorage.deleteFilmById(id);
     }
@@ -50,6 +50,7 @@ public class FilmService {
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().add(userId);
+        filmStorage.saveLikeToTable(filmId, userId);
         return film;
     }
 
@@ -58,6 +59,7 @@ public class FilmService {
 
         userStorage.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         film.getLikes().remove(userId);
+        filmStorage.deleteLikeFromTable(filmId, userId);
         return film;
     }
 

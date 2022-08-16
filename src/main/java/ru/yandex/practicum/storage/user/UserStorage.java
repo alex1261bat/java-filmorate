@@ -17,5 +17,9 @@ public interface UserStorage {
 
     User updateUser(User user); // метод обновления пользователя
 
-    User deleteUserById(long id); // метод удаления пользователя по id
+    boolean deleteUserById(long id); // метод удаления пользователя по id
+
+    void saveFriendToTable(long userId, long friendId); // сохранение друга в DB
+
+    void deleteFriendFromTable(long userId, long friendId); // удаление друга из DB
 }
