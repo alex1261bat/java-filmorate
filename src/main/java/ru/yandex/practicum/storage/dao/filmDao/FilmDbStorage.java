@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.exceptions.FilmNotFoundException;
 import ru.yandex.practicum.models.Film;
 import ru.yandex.practicum.models.Genre;
+import ru.yandex.practicum.models.RatingMPA;
 import ru.yandex.practicum.services.GenreService;
 import ru.yandex.practicum.services.RatingMPAService;
 import ru.yandex.practicum.storage.film.FilmStorage;
@@ -91,11 +92,26 @@ public class FilmDbStorage implements FilmStorage {
         return jdbcTemplate.update(sqlQuery, id) > 0;
     }
 
+    @Override
+    public void saveLikeToTable(long filmId, long userId) {
+        String sqlQuery = "insert into film_likes (film_id, user_id) " +
+                "values (?, ?)";
+
+        jdbcTemplate.update(sqlQuery, filmId, userId);
+    }
+
+    @Override
+    public void deleteLikeFromTable (long filmId, long userId) {
+        String sqlQuery = "delete from film_likes where film_id = ? and user_id = ?";
+
+        jdbcTemplate.update(sqlQuery, filmId, userId);
+    }
+
     private Film makeFilm(ResultSet resultSet, int rowNum) throws SQLException {
+        RatingMPA mpa = ratingMPAService.findRatingMPAById(resultSet.getInt("film_rating_MPA_id"));
         Film film = new Film(resultSet.getLong("id"), resultSet.getString("name"),
                 resultSet.getString("description"), resultSet.getInt("duration"),
-                resultSet.getDate("release_date").toLocalDate(),
-                ratingMPAService.findRatingMPAById(resultSet.getInt("film_rating_MPA_id")));
+                resultSet.getDate("release_date").toLocalDate(), mpa);
 
         loadFilmGenres(film);
         loadFilmLikes(film);
@@ -116,8 +132,10 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void loadFilmGenres(Film film) {
-        if (!getFilmGenresIdFromTable(film).isEmpty()) {
-            for (Integer id : getFilmGenresIdFromTable(film)) {
+        Collection<Integer> genresIds = getFilmGenresIdFromTable(film);
+
+        if (!genresIds.isEmpty()) {
+            for (Integer id : genresIds) {
                 film.getGenres().add(genreService.findGenreById(id));
             }
         }
@@ -133,8 +151,10 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private void loadFilmLikes(Film film) {
-        if (!getFilmLikesFromTable(film).isEmpty()) {
-            for (Long id : getFilmLikesFromTable(film)) {
+        Collection<Long> filmLikes = getFilmLikesFromTable(film);
+
+        if (!filmLikes.isEmpty()) {
+            for (Long id : filmLikes) {
                 film.getLikes().add(id);
             }
         }

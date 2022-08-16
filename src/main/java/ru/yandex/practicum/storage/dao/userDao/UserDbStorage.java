@@ -76,6 +76,22 @@ public class UserDbStorage implements UserStorage {
         return jdbcTemplate.update(sqlQuery, id) > 0;
     }
 
+    @Override
+    public void saveFriendToTable(long userId, long friendId) {
+        String sqlQuery = "insert into user_friends (user_id, other_user_id, friend_status_id) " +
+                "values (?, ?, ?)";
+
+        jdbcTemplate.update(sqlQuery, userId, friendId, 1);
+    }
+
+    @Override
+    public void deleteFriendFromTable (long userId, long friendId) {
+        String sqlQuery = "delete from user_friends where user_id = ? and other_user_id = ?";
+
+        jdbcTemplate.update(sqlQuery, friendId, userId);
+        jdbcTemplate.update(sqlQuery, userId, friendId);
+    }
+
     private User makeUser(ResultSet resultSet, int rowNum) throws SQLException {
         User user = new User(resultSet.getLong("id"), resultSet.getString("name"),
                 resultSet.getString("login"), resultSet.getString("email"),
@@ -86,8 +102,10 @@ public class UserDbStorage implements UserStorage {
     }
 
     private void loadUserFriends(User user) {
-        if (!getUserFriendsFromTable(user).isEmpty()) {
-            for (Long id : getUserFriendsFromTable(user)) {
+        Collection<Long> friends = getUserFriendsFromTable(user);
+
+        if (!friends.isEmpty()) {
+            for (Long id : friends) {
                 user.getFriends().add(id);
             }
         }

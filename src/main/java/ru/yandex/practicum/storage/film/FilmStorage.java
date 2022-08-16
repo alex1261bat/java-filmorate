@@ -18,4 +18,8 @@ public interface FilmStorage {
     Film updateFilm(Film film); // метод обновления фильма
 
     boolean deleteFilmById(long id); // метод удаления фильма по id
+
+    void saveLikeToTable(long filmId, long userId); // добавление лайка в DB
+
+    void deleteLikeFromTable(long filmId, long userId); // удаление лайка из DB
 }

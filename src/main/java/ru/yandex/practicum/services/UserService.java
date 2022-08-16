@@ -1,7 +1,6 @@
 package ru.yandex.practicum.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.exceptions.UserNotFoundException;
 import ru.yandex.practicum.models.User;
@@ -15,12 +14,10 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserStorage userStorage;
-    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserService(UserStorage userStorage, JdbcTemplate jdbcTemplate) {
+    public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Collection<User> findAllUsers() {
@@ -50,7 +47,7 @@ public class UserService {
         User friend = findUserById(friendId);
 
         friend.getFriends().add(userId);
-        saveFriendToTable(userId, friendId);
+        userStorage.saveFriendToTable(userId, friendId);
         return friend;
     }
 
@@ -60,7 +57,7 @@ public class UserService {
 
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
-        deleteFriendFromTable(userId, friendId);
+        userStorage.deleteFriendFromTable(userId, friendId);
         return user;
     }
 
@@ -91,19 +88,5 @@ public class UserService {
         }
 
         return commonFriends;
-    }
-
-    private void saveFriendToTable(long userId, long friendId) {
-        String sqlQuery = "insert into user_friends (user_id, other_user_id, friend_status_id) " +
-                "values (?, ?, ?)";
-
-        jdbcTemplate.update(sqlQuery, userId, friendId, 1);
-    }
-
-    private void deleteFriendFromTable (long userId, long friendId) {
-        String sqlQuery = "delete from user_friends where user_id = ? and other_user_id = ?";
-
-        jdbcTemplate.update(sqlQuery, friendId, userId);
-        jdbcTemplate.update(sqlQuery, userId, friendId);
     }
 }
